@@ -22,7 +22,7 @@ public class Example
         // Arrange
         int a = 3;
         int b = 3;
-        int expected = 4;
+        int expected = 6;
 
         // Act
         var result = a + b;
