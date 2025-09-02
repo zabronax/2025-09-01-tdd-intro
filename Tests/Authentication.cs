@@ -30,7 +30,7 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task Register_Endpoint_Should_Allow_Registering_New_ID()
+    public async Task RegistrationEndpoint_Exists()
     {
         // Arrange
         // Noe å sende meldinger med
@@ -46,7 +46,7 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
             new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json"));
 
         // Assert
-        response.EnsureSuccessStatusCode();
         // Resultat skal stemme overens med våre antakelser
+        response.EnsureSuccessStatusCode();
     }
 }
