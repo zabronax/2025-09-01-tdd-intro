@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Tests;
@@ -22,7 +22,7 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync("/health");
 
         // Assert
-        response.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     // [Fact]
