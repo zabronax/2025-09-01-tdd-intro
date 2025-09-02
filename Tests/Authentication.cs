@@ -49,4 +49,22 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         // Resultat skal stemme overens med våre antakelser
         response.EnsureSuccessStatusCode();
     }
+
+    [Fact]
+    public async Task RegistrationEndpoint_ShouldReturn_NewLibraryCard()
+    {
+        // TODO! How to verify this?
+
+        // Arrange
+        var client = _factory.CreateClient();
+        var id = new PasswordIdentifier { Secret = "some-secret" };
+
+        // Act
+        var response = await client.PostAsync(
+            "/authentication/register",
+            new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json"));
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+    }
 }
