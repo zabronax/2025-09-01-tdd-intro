@@ -1,4 +1,8 @@
 ﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Tests;
@@ -25,26 +29,24 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    // [Fact]
-    // public void Register_Endpoint_Should_Allow_Registering_New_ID()
-    // {
-    //     // Arrange
-    //     // Noe å sende meldinger med
-    //     var client = new HttpClient();
-    //     // Serveren å sende meldinger til
-    //     // Vår hemmelige ID
-    //     string userSecret = "super-secret-password";
-    //     var payload = new { message = userSecret };
-    //     // Det "ID kort" (JWT) vi forventer å få tilbake 
+    [Fact]
+    public async Task Register_Endpoint_Should_Allow_Registering_New_ID()
+    {
+        // Arrange
+        // Noe å sende meldinger med
+        var client = _factory.CreateClient();
+        // Serveren å sende meldinger til
+        // Vår hemmelige ID
+        var id = new PasswordIdentifier { Secret = "some-secret" };
 
-    //     // Act
-    //     // Når vi sender en melding til endepunktet
-    //     // client.PostAsync(
-    //     //     "/authentication/register",
-    //     //     new StringContent(payload.ToString(), Encoding.UTF8, "application/json"));
-    //     // Så får vi tilbake et result
+        // Act
+        // Når vi sender en melding til endepunktet
+        var response = await client.PostAsync(
+            "/authentication/register",
+            new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json"));
 
-    //     // Assert
-    //     // Resultat skal stemme overens med våre antakelser
-    // }
+        // Assert
+        response.EnsureSuccessStatusCode();
+        // Resultat skal stemme overens med våre antakelser
+    }
 }
