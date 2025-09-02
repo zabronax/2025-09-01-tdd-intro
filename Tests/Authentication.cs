@@ -1,21 +1,50 @@
-﻿namespace Tests;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
 
-public class Authentication
+namespace Tests;
+
+public class Authentication : IClassFixture<WebApplicationFactory<Program>>
 {
+    private readonly WebApplicationFactory<Program> _factory;
+
+    public Authentication(WebApplicationFactory<Program> factory)
+    {
+        _factory = factory;
+    }
+
     [Fact]
-    public void Register_Endpoint_Should_Allow_Registering_New_ID()
+    public async Task ServerShouldReturn_Succes_OnHealth_Endpoint()
     {
         // Arrange
-        // Noe å sende meldinger med
-        // Serveren å sende meldinger til
-        // Vår hemmelige ID
-        // Det "ID kort" (JWT) vi forventer å få tilbake 
+        var client = _factory.CreateClient();
 
         // Act
-        // Når vi sender en melding til endepunktet
-        // Så får vi tilbake et result
+        var response = await client.GetAsync("/health");
 
         // Assert
-        // Resultat skal stemme overens med våre antakelser
+        response.EnsureSuccessStatusCode();
     }
+
+    // [Fact]
+    // public void Register_Endpoint_Should_Allow_Registering_New_ID()
+    // {
+    //     // Arrange
+    //     // Noe å sende meldinger med
+    //     var client = new HttpClient();
+    //     // Serveren å sende meldinger til
+    //     // Vår hemmelige ID
+    //     string userSecret = "super-secret-password";
+    //     var payload = new { message = userSecret };
+    //     // Det "ID kort" (JWT) vi forventer å få tilbake 
+
+    //     // Act
+    //     // Når vi sender en melding til endepunktet
+    //     // client.PostAsync(
+    //     //     "/authentication/register",
+    //     //     new StringContent(payload.ToString(), Encoding.UTF8, "application/json"));
+    //     // Så får vi tilbake et result
+
+    //     // Assert
+    //     // Resultat skal stemme overens med våre antakelser
+    // }
 }
