@@ -1,3 +1,17 @@
+## Commands
+
+- Run all tests once:
+
+    ```sh
+    dotnet test
+    ```
+
+- Run tests for a single project:
+
+    ```sh
+    dotnet test <PROJECT_PATH>
+    ```
+
 ## Test Packages
 
 - Testing Web APIs:
