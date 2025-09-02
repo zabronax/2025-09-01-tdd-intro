@@ -1,3 +1,11 @@
+## Test Packages
+
+- Testing Web APIs:
+
+    ```sh
+    dotnet add <PROJECT_PATH> package Microsoft.AspNetCore.Mvc.Testing
+    ```
+
 ## Sketch
 
 ![Sketches from class](/docs/sketches-09-04.excalidraw.png)
