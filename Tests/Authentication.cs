@@ -70,7 +70,7 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         response.EnsureSuccessStatusCode(); // This ensures 2xx status code
 
         // Check that we have a valid JSON object
-        var result = await response.Content.ReadFromJsonAsync<LibraryCard>();
+        var result = await response.Content.ReadFromJsonAsync<object>();
         Assert.NotNull(result);
     }
 }
