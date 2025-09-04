@@ -96,4 +96,27 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         var result = await response.Content.ReadFromJsonAsync<LibraryCardDTO>();
         Assert.NotNull(result);
     }
+
+    [Fact]
+    public async Task TryingToRegisterTwice_ShouldFail()
+    {
+        // TODO! How to verify this?
+
+        // Arrange
+        var client = _factory.CreateClient();
+        var registrationAttemptA = new PasswordIdentifier { Secret = "some-secret" };
+        var registrationAttemptB = new PasswordIdentifier { Secret = "some-secret" };
+
+        // Act
+        var responseA = await client.PostAsync(
+            "/authentication/register",
+            new StringContent(JsonSerializer.Serialize(registrationAttemptA), Encoding.UTF8, "application/json"));
+        var responseB = await client.PostAsync(
+            "/authentication/register",
+            new StringContent(JsonSerializer.Serialize(registrationAttemptB), Encoding.UTF8, "application/json"));
+
+        // Assert
+        responseA.EnsureSuccessStatusCode(); // First should work
+        Assert.Equal(HttpStatusCode.Conflict, responseB.StatusCode); // Second should fail
+    }
 }
