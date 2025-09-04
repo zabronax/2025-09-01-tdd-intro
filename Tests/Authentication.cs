@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -51,13 +52,14 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task RegistrationEndpoint_ShouldReturn_NewLibraryCard()
+    public async Task RegistrationEndpoint_ShouldReturn_ValidJson()
     {
         // TODO! How to verify this?
 
         // Arrange
         var client = _factory.CreateClient();
         var id = new PasswordIdentifier { Secret = "some-secret" };
+        var expected = new LibraryCard(id);
 
         // Act
         var response = await client.PostAsync(
@@ -65,6 +67,10 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
             new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json"));
 
         // Assert
-        response.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode(); // This ensures 2xx status code
+
+        // Check that we have a valid JSON object
+        var result = await response.Content.ReadFromJsonAsync<LibraryCard>();
+        Assert.NotNull(result);
     }
 }
