@@ -6,6 +6,6 @@ public class LibraryCard
     public LibraryCard(PasswordIdentifier identifier)
     {
         // TODO! What if the ID alread has a Library Card registered
-        Id = new Guid();
+        Id = Guid.NewGuid();
     }
 }
