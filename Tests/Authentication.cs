@@ -119,4 +119,32 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         responseA.EnsureSuccessStatusCode(); // First should work
         Assert.Equal(HttpStatusCode.Conflict, responseB.StatusCode); // Second should fail
     }
+
+    [Fact]
+    public async Task TryingToRegisterTwice_ShouldFail_EvenAfter_Reboot()
+    {
+        // Arrange
+        await using var factoryA = new WebApplicationFactory<Program>();
+        var clientA = factoryA.CreateClient();
+
+        var registration = new PasswordIdentifier { Secret = "some-secret" };
+        var payload = new StringContent(
+            JsonSerializer.Serialize(registration),
+            Encoding.UTF8,
+            "application/json");
+
+        // Act 1: Register first time
+        var responseA = await clientA.PostAsync("/authentication/register", payload);
+        responseA.EnsureSuccessStatusCode();
+
+        // "Reboot" server: dispose and recreate factory
+        await using var factoryB = new WebApplicationFactory<Program>();
+        var clientB = factoryB.CreateClient();
+
+        // Act 2: Try registering again
+        var responseB = await clientB.PostAsync("/authentication/register", payload);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Conflict, responseB.StatusCode);
+    }
 }
