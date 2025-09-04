@@ -3,10 +3,18 @@ using Api.DTO;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapPost("/authentication/register", () =>
+Dictionary<string, LibraryCard> registeredCards = [];
+
+app.MapPost("/authentication/register", (PasswordIdentifier identifier) =>
 {
-    var identifier = new PasswordIdentifier { Secret = "something" };
+    // First check if already registered
+    if (registeredCards.ContainsKey(identifier.Secret))
+    {
+        return Results.Conflict();
+    }
+
     var newLibraryCard = new LibraryCard(identifier);
+    registeredCards.Add(identifier.Secret, newLibraryCard);
 
     var returnDTO = new LibraryCardDTO
     {
