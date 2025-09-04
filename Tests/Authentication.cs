@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Api.DTO;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Tests;
@@ -59,7 +60,6 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
         // Arrange
         var client = _factory.CreateClient();
         var id = new PasswordIdentifier { Secret = "some-secret" };
-        var expected = new LibraryCard(id);
 
         // Act
         var response = await client.PostAsync(
@@ -71,6 +71,29 @@ public class Authentication : IClassFixture<WebApplicationFactory<Program>>
 
         // Check that we have a valid JSON object
         var result = await response.Content.ReadFromJsonAsync<object>();
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async Task RegistrationEndpoint_ShouldReturn_ValidLibraryCard()
+    {
+        // TODO! How to verify this?
+
+        // Arrange
+        var client = _factory.CreateClient();
+        var id = new PasswordIdentifier { Secret = "some-secret" };
+        var expected = new LibraryCard(id);
+
+        // Act
+        var response = await client.PostAsync(
+            "/authentication/register",
+            new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json"));
+
+        // Assert
+        response.EnsureSuccessStatusCode(); // This ensures 2xx status code
+
+        // Check that we have a valid JSON object
+        var result = await response.Content.ReadFromJsonAsync<LibraryCardDTO>();
         Assert.NotNull(result);
     }
 }

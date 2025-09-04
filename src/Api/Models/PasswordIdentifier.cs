@@ -1,4 +1,4 @@
 public class PasswordIdentifier
 {
-  public required string Secret { get; init; }
+    public required string Secret { get; init; }
 }
